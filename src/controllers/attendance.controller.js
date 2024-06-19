@@ -147,9 +147,7 @@ export async function attendanceWeeklyStatusController(req, res) {
         return presentStudentCount;
       })
     );
-
     const totalStudentCount = await getStudentCount({ sectionId });
-    // console.log(weeklyAttendance);
     return res.send(success(200, { weeklyAttendance, totalStudentCount }));
   } catch (err) {
     return res.send(error(500, err.message));
@@ -185,7 +183,6 @@ export async function attendanceMonthlyStatusController(req, res) {
       })
     );
     const totalStudentCount = await getStudentCount({ sectionId });
-    console.log(monthlyAttendance);
     return res.send(success(200, { monthlyAttendance, totalStudentCount }));
   } catch (err) {
     return res.send(error(500, err.message));

@@ -6,6 +6,7 @@ import {
   deleteStudentController,
   getAllStudentListForAdminController,
   getAllStudentOfSectionController,
+  getSearchedStudentOfSectionController,
   getStudentListOfSectionController,
   getStudentListOfSectionForAdminController,
   registerStudentController,
@@ -433,6 +434,12 @@ studentRouter.put(
   "/update-student/:studentId",
   classTeacherAuthentication,
   updateStudentController
+);
+
+studentRouter.get(
+  "/search-student/:sectionId/:firstname",
+  classTeacherAuthentication,
+  getSearchedStudentOfSectionController
 );
 
 export default studentRouter;

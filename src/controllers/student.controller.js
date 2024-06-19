@@ -1,4 +1,5 @@
 import { findAdminByID } from "../services/admin.services.js";
+import { checkAttendanceAlreadyMarkedOfStudent } from "../services/attendance.service.js";
 import { findClassById } from "../services/class.sevices.js";
 import {
   checkStudentExistInSection,
@@ -13,6 +14,7 @@ import {
   findStudentById,
   getAllStudentCount,
   getAllStudentList,
+  getStudentByName,
   getStudentCount,
   getStudentList,
   getStudentListBySectionId,
@@ -233,9 +235,31 @@ export async function getAllStudentOfSectionController(req, res) {
     const studentList = await getStudentListBySectionId({
       sectionId,
     });
-    return res.send(
-      success(200, { totalCount: studentCount, studentList })
+    return res.send(success(200, { totalCount: studentCount, studentList }));
+  } catch (err) {
+    return res.send(error(500, err.message));
+  }
+}
+
+export async function getSearchedStudentOfSectionController(req, res) {
+  try {
+    const firstname = req.params.firstname;
+    const sectionId = req.params.sectionId;
+    const students = await getStudentByName({ sectionId, firstname });
+    const date = new Date();
+    const currDate =
+      date.getDate() + "-" + (date.getMonth() + 1) + "-" + date.getFullYear();
+    const isPresent = await Promise.all(
+      students.map(async (student) => {
+        const attendance = await checkAttendanceAlreadyMarkedOfStudent({
+          sectionId,
+          studentId: student._id,
+          currDate,
+        });
+        return attendance;
+      })
     );
+    return res.send(success(200, { students, isPresent }));
   } catch (err) {
     return res.send(error(500, err.message));
   }

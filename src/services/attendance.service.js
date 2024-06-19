@@ -81,3 +81,12 @@ export async function checkAttendanceAlreadyMarked({sectionId, currDate}){
     throw error;    
   }
 }
+
+export async function checkAttendanceAlreadyMarkedOfStudent({sectionId,studentId, currDate}){
+  try {
+    const attendanceMarked = await attendanceModel.findOne({$and:[{section:sectionId},{student:studentId},{date:currDate}]});
+    return attendanceMarked.isPresent;
+  } catch (error) {
+    throw error;    
+  }
+}
